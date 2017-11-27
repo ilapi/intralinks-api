@@ -13,3 +13,10 @@ Go to https://developer.intralinks.com/ and create your Developer Account if you
 
 ![New app - Step 1](/images/NewApp1.png)
 ![New app - Step 2](/images/NewApp2.png)
+
+Note: Requests for new application are reviewed by Intralinks' API Team. Your new application should be validated within a few days.
+
+## Get Application OAuth Keys
+
+![App details - Step 1](/images/AppDetails1.png)
+![App details - Step 2](/images/AppDetails2.png)
