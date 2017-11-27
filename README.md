@@ -1,4 +1,4 @@
 # Introduction to the Intralinks' API
 
-https://github.com/ilapi/intralinks-python/blob/master/INTRALINKS_PYTHON.md
+[Introduction to the Intralinks API with Python](https://github.com/ilapi/intralinks-python/blob/master/INTRALINKS_PYTHON.md)
 
