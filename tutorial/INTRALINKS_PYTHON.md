@@ -1,11 +1,5 @@
 # Introduction to the Intralinks API
 
-## Installation
-
-```
-pip install requests
-```
-
 ## Authentication
 
 ```python
