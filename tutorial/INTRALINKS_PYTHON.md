@@ -40,7 +40,7 @@ exchange_request = requests.get(base_url + '/v2/workspaces', headers={
 exchanges_data = exchange_request.json()
 
 for exchange in exchanges_data['workspace']:
-    print('{name:50.50} | {id:>9} | {host:20.20} | {phase:20}'.format(exchange))
+    print('{name:50.50} | {id:>9} | {host:20.20} | {phase:20}'.format(**exchange))
 ```
 
 See https://docs.python.org/3.4/library/string.html#format-examples about ```format()```
