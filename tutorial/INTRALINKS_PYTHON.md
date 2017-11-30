@@ -21,7 +21,7 @@ Additional topics
 * Set Permission
 * Send Alerts
 
-## Authentication
+## Login
 
 [Developer Documentation](https://developers.intralinks.com/content/oauth_token_info)
 
@@ -39,7 +39,7 @@ request = requests.post(base_url + '/v2/oauth/token', data={
     'grant_type':'client_credentials',
     'client_id':client_id,
     'client_secret':client_secret,
-    'endOtherSessions':True,
+    'endOtherSessions':'True',
     'email':email,
     'password':password
 })
@@ -85,6 +85,18 @@ Status code 403
 }
 ```
 
+Status code 403
+
+```json
+{
+    "error":{
+        "code":403,
+        "message":"Your session has been logged out as the same user is logged in elsewhere.",
+        "subcode":"018"
+    }
+}
+```
+
 ## Listing exchanges
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspaces/get_workspaces)
@@ -93,6 +105,7 @@ Status code 403
 import requests
 
 base_url = 'https://test-api.intralinks.com'
+
 access_token = 'your_access_token'
 
 request = requests.get(base_url + '/v2/workspaces', headers={
@@ -168,6 +181,7 @@ Status code 200
 import requests
 
 base_url = 'https://test-api.intralinks.com'
+
 access_token = 'your_access_token'
 exchange_id = 1234
 
@@ -201,8 +215,6 @@ print(request.text)
 }
 ```
 
-# Question: How to get the splash image?
-
 ### Accepting the splash screen
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspaces/post_workspaces_workspace_id_splash)
@@ -212,6 +224,7 @@ import requests
 import json
 
 base_url = 'https://test-api.intralinks.com'
+
 access_token = 'your_access_token'
 exchange_id = 1234
 
@@ -229,13 +242,13 @@ accept_splash_state = request.json() ['state']
 ```
 
 ```json
-    {
-        "status":{
-            "code":201,
-            "message":"The entities have been created"
-        },
-        "state":"ALLOW"
-    }
+{
+    "status":{
+        "code":201,
+        "message":"The entities have been created"
+    },
+    "state":"ALLOW"
+}
 ```
 
 ## Listing folders
@@ -246,6 +259,7 @@ accept_splash_state = request.json() ['state']
 import requests
 
 base_url = 'https://test-api.intralinks.com'
+
 access_token = 'your_access_token'
 exchange_id = 1234
 
@@ -342,6 +356,7 @@ folders = json_data['folder']
 import requests
 
 base_url = 'https://test-api.intralinks.com'
+
 access_token = 'your_access_token'
 exchange_id = 1234
 
@@ -364,6 +379,7 @@ documents = json_data['document']
 import requests
 
 base_url = 'https://test-api.intralinks.com'
+
 access_token = 'your_access_token'
 exchange_id = 1234
 
@@ -386,6 +402,7 @@ users = json_data['users']
 import requests
 
 base_url = 'https://test-api.intralinks.com'
+
 access_token = 'your_access_token'
 exchange_id = 1234
 
@@ -401,6 +418,29 @@ groups = json_data['groups']
 ```
 
 ## Logout
+
+[Developer Documentation](https://developers.intralinks.com/content/oauth_revoke)
+
+```python
+import requests
+
+base_url = 'https://test-api.intralinks.com'
+
+access_token = 'your_access_token'
+client_id = 'your_consumer_key'
+client_secret = 'your_consumer_secret'
+
+request = requests.put(base_url + '/v2/oauth/revoke', params={
+        'token': access_token,
+        'client_id': client_id,
+        'client_secret': client_secret
+    }, headers={
+        'Authorization': 'Bearer {}'.format(access_token)
+})
+
+print(request.status_code)
+print(request.text)
+```
 
 ## Typical Errors
 
@@ -421,4 +461,44 @@ Status Code 401
 
 ### Wrong ID
 
+You are trying a resource that does not exists. Or you are trying to access a resource you do not have access to.
+
+Status Code 400
+
+```json
+{
+    "status":{
+        "code":400,
+        "subcode":"3-1",
+        "message":"Cannot find entity in repository",
+        "errorId":"XXXX"
+    },
+    "errors":[{
+        "code":400,
+        "subCode":"3-1",
+        "message":"Cannot find entity in repository"
+    }]
+}
+```
+
 ### Splash not accepted
+
+You are trying to access the content of an Exchange. But you have not accepted the Splash.
+
+Status code 303
+
+```json
+{
+    "status":{
+        "code":303,
+        "subcode":"1",
+        "message":"Workspace entrance requirements not met.",
+        "errorId":"XXXX"
+    },
+    "errors":[{
+        "code":303,
+        "subCode":"1",
+        "message":"Workspace entrance requirements not met."
+    }]
+}
+```
