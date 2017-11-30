@@ -25,7 +25,7 @@ Additional topics
 
 ## Login
 
-[Developer Documentation](https://developers.intralinks.com/content/oauth_token_info)
+[Developer Documentation](https://developers.intralinks.com/content/oauth_token)
 
 ```python
 import requests
