@@ -386,6 +386,7 @@ base_url = 'https://test-api.intralinks.com'
 access_token = 'your_access_token'
 exchange_id = 1234
 document_id = 5678
+file_path = r'C:\Temp\MyFile.pdf'
 
 request = requests.get(base_url + '/v2/workspaces/{}/documents/{}/file'.format(exchange_id, document_id), headers={
     'Authorization': 'Bearer {}'.format(access_token)
