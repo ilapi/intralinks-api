@@ -240,7 +240,8 @@ request = requests.post(base_url + '/v2/workspaces/{}/splash'.format(exchange_id
 print(request.status_code)
 print(request.text)
 
-accept_splash_state = request.json() ['state']
+json_data = request.json()
+accept_splash_state = json_data['state']
 ```
 
 ```json
@@ -386,7 +387,7 @@ access_token = 'your_access_token'
 exchange_id = 1234
 document_id = 5678
 
-request = requests.get(base_url + "/v2/workspaces/{}/documents/{}/file".format(exchange_id, document_id), headers={
+request = requests.get(base_url + '/v2/workspaces/{}/documents/{}/file'.format(exchange_id, document_id), headers={
     'Authorization': 'Bearer {}'.format(access_token)
 }, stream=True)
 
