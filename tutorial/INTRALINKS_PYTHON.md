@@ -234,6 +234,30 @@ print(request.text)
 }
 ```
 
+### Getting the splash screen image
+
+```python
+import requests
+
+base_url = 'https://test-api.intralinks.com'
+
+access_token = 'your_access_token'
+exchange_id = 1234
+file_path = ''
+
+request = requests.get(base_url + '/services/workspaces/splashImage', params={'workspaceId': exchange_id}, headers={
+    'Authorization': 'Bearer {}'.format(access_token)
+}, stream=True)
+
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+
+with open(file_path, 'wb') as file:
+    for chunk in request.iter_content(chunk_size=1024): 
+        if chunk: 
+            file.write(chunk)
+```
+
 ### Accepting the splash screen
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspaces/post_workspaces_workspace_id_splash)
