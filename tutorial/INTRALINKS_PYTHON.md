@@ -397,3 +397,7 @@ Status Code 401
     }
 }
 ```
+
+### Wrong ID
+
+### Splash not accepted
