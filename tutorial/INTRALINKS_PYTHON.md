@@ -473,6 +473,16 @@ print(request.status_code)
 print(request.text)
 ```
 
+Status code 200
+
+```json
+{
+    "message":"the passed token and associated refresh/access token have been revoked",
+    "token":"XXXX",
+    "cascade":"true"
+}
+```
+
 ## Typical Errors
 
 ### Wrong Access Token
