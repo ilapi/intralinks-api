@@ -1,11 +1,13 @@
 # Introduction to the Intralinks API
 
 * Login
-* Listing Exchanges
-* Entering an Exchange
+* Exchanges
+  * Listing Exchanges
+  * Entering an Exchange
 * Documents & Folders
   * Listing Folders
   * Listing Documents
+  * Downloading a document
 * Users & Groups
   * Listing Users
   * Listing Groups
@@ -370,6 +372,33 @@ print(request.text)
 json_data = request.json()
 documents = json_data['document']
 ```
+
+## Dowloading a file
+
+[Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Documents/get_document_file)
+
+```python
+import requests
+
+base_url = 'https://test-api.intralinks.com'
+
+access_token = 'your_access_token'
+exchange_id = 1234
+document_id = 5678
+
+request = requests.get(base_url + "/v2/workspaces/{}/documents/{}/file".format(exchange_id, document_id), headers={
+    'Authorization': 'Bearer {}'.format(access_token)
+}, stream=True)
+
+print(request.status_code)
+
+with open(file_path, 'wb') as file:
+    for chunk in request.iter_content(chunk_size=1024): 
+        if chunk: 
+            file.write(chunk)
+```
+
+https://stackoverflow.com/questions/16694907/how-to-download-large-file-in-python-with-requests-py
 
 ## Listing users
 
