@@ -46,7 +46,9 @@ request = requests.post(base_url + '/v2/oauth/token', data={
     'password':password
 })
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 
 json_data = request.json()
@@ -114,7 +116,9 @@ request = requests.get(base_url + '/v2/workspaces', headers={
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 
 json_data = request.json()
@@ -125,7 +129,6 @@ for exchange in exchanges:
 ```
 
 See https://docs.python.org/3.4/library/string.html#format-examples about ```format()```
-
 
 Status code 200
 
@@ -173,6 +176,18 @@ Status code 200
 }
 ```
 
+## (Variant) Listing exchanges associated to a given branding
+
+[Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspaces/get_workspaces)
+
+```python
+brand_id = 1234
+
+request = requests.get(base_url + '/v2/workspaces', params={'brandId': brand_id}, headers={
+    'Authorization': 'Bearer {}'.format(access_token)
+})
+```
+
 ## Entering an exchange
 
 ### Getting the splash screen
@@ -191,7 +206,9 @@ request = requests.get(base_url + '/v2/workspaces/{}/splash'.format(exchange_id)
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 ```
 
@@ -237,7 +254,9 @@ request = requests.post(base_url + '/v2/workspaces/{}/splash'.format(exchange_id
         'Content-Type': 'application/json'
 })
 
-print(request.status_code)
+if request.status_code != 201:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 
 json_data = request.json()
@@ -270,11 +289,16 @@ request = requests.get(base_url + '/v2/workspaces/{}/folders'.format(exchange_id
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 
 json_data = request.json()
 folders = json_data['folder']
+
+for folder in folders:
+    print('{name:50.50} | {id:>9} | {indexNumber:20.20}'.format(**folder))
 ```
 
 ```json
@@ -367,11 +391,16 @@ request = requests.get(base_url + '/v2/workspaces/{}/documents'.format(exchange_
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 
 json_data = request.json()
 documents = json_data['document']
+
+for document in documents:
+    print('{name:50.50} | {id:>9} | {indexNumber:20.20}'.format(**document))
 ```
 
 ## Dowloading a file
@@ -392,7 +421,8 @@ request = requests.get(base_url + '/v2/workspaces/{}/documents/{}/file'.format(e
     'Authorization': 'Bearer {}'.format(access_token)
 }, stream=True)
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
 
 with open(file_path, 'wb') as file:
     for chunk in request.iter_content(chunk_size=1024): 
@@ -418,11 +448,16 @@ request = requests.get(base_url + '/v2/workspaces/{}/users'.format(exchange_id),
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 
 json_data = request.json()
 users = json_data['users']
+
+for user in users:
+    print('{lastName:50.50} | {firstName:50.50} | {organization:50.50} | {email:50.50} | {role:20.20}'.format(**user))
 ```
 
 ## Listing groups
@@ -441,11 +476,16 @@ request = requests.get(base_url + '/v2/workspaces/{}/groups'.format(exchange_id)
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 
 json_data = request.json()
 groups = json_data['groups']
+
+for group in groups:
+    print('{name:50.50} | {id:>9} | {type:20.20}'.format(**group))
 ```
 
 ## Logout
@@ -469,7 +509,9 @@ request = requests.put(base_url + '/v2/oauth/revoke', params={
         'Authorization': 'Bearer {}'.format(access_token)
 })
 
-print(request.status_code)
+if request.status_code != 200:
+    raise Exception(request.status_code, request.text)
+    
 print(request.text)
 ```
 
