@@ -1,5 +1,26 @@
 # Introduction to the Intralinks API
 
+* Login
+* Listing Exchanges
+* Entering an Exchange
+* Documents & Folders
+  * Listing Folders
+  * Listing Documents
+* Users & Groups
+  * Listing Users
+  * Listing Groups
+* Listing Permissions
+* Listing Audits
+* Logout
+
+Additional topics
+* Create Folder
+* Create Document
+* Create User
+* Create Group
+* Set Permission
+* Send Alerts
+
 ## Authentication
 
 [Developer Documentation](https://developers.intralinks.com/content/oauth_token_info)
