@@ -335,28 +335,6 @@ json_data = request.json()
 documents = json_data['document']
 ```
 
-## Listing groups
-
-[Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspace_Groups/get_workspaces_workspace_id_groups)
-
-```python
-import requests
-
-base_url = 'https://test-api.intralinks.com'
-access_token = 'your_access_token'
-exchange_id = 1234
-
-request = requests.get(base_url + '/v2/workspaces/{}/groups'.format(exchange_id), headers={
-    'Authorization': 'Bearer {}'.format(access_token)
-})
-
-print(request.status_code)
-print(request.text)
-
-json_data = request.json()
-groups = json_data['groups']
-```
-
 ## Listing users
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspace_Users/get_workspaces_workspace_id_users)
@@ -377,6 +355,28 @@ print(request.text)
 
 json_data = request.json()
 users = json_data['users']
+```
+
+## Listing groups
+
+[Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspace_Groups/get_workspaces_workspace_id_groups)
+
+```python
+import requests
+
+base_url = 'https://test-api.intralinks.com'
+access_token = 'your_access_token'
+exchange_id = 1234
+
+request = requests.get(base_url + '/v2/workspaces/{}/groups'.format(exchange_id), headers={
+    'Authorization': 'Bearer {}'.format(access_token)
+})
+
+print(request.status_code)
+print(request.text)
+
+json_data = request.json()
+groups = json_data['groups']
 ```
 
 ## Logout
