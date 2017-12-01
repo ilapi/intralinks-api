@@ -1,5 +1,16 @@
 # Introduction to the Intralinks API with Python
 
+Open Questions
+
+* Login Process is not standard
+* End other sessions
+* How to get Splash Image
+* What if no Splash
+* How to use Document Token
+* Retrieve Users & Groups at the same time
+
+Content
+
 * Login
 * Exchanges
   * Listing Exchanges
