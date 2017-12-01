@@ -48,14 +48,12 @@ request = requests.post(base_url + '/v2/oauth/token', data={
 
 if request.status_code != 200:
     raise Exception(request.status_code, request.text)
-    
-print(request.text)
 
 json_data = request.json()
 access_token = json_data['access_token']
 ```
 
-Status code 200
+Calling ```print(request.text)``` would show something like:
 
 ```json
 {
@@ -119,8 +117,6 @@ request = requests.get(base_url + '/v2/workspaces', headers={
 if request.status_code != 200:
     raise Exception(request.status_code, request.text)
     
-print(request.text)
-
 json_data = request.json()
 exchanges = json_data['workspace']
 
@@ -130,7 +126,7 @@ for exchange in exchanges:
 
 See https://docs.python.org/3.4/library/string.html#format-examples about ```format()```
 
-Status code 200
+Calling ```print(request.text)``` would show something like:
 
 ```
 {
@@ -208,9 +204,12 @@ request = requests.get(base_url + '/v2/workspaces/{}/splash'.format(exchange_id)
 
 if request.status_code != 200:
     raise Exception(request.status_code, request.text)
-    
-print(request.text)
+
+json_data = request.json()
+splashRequired = json_data['splash']['splashRequired']
 ```
+
+Calling ```print(request.text)``` would show something like:
 
 ```json
 {
@@ -280,12 +279,12 @@ request = requests.post(base_url + '/v2/workspaces/{}/splash'.format(exchange_id
 
 if request.status_code != 201:
     raise Exception(request.status_code, request.text)
-    
-print(request.text)
 
 json_data = request.json()
 accept_splash_state = json_data['state']
 ```
+
+Calling ```print(request.text)``` would show something like:
 
 ```json
 {
@@ -315,8 +314,6 @@ request = requests.get(base_url + '/v2/workspaces/{}/folders'.format(exchange_id
 
 if request.status_code != 200:
     raise Exception(request.status_code, request.text)
-    
-print(request.text)
 
 json_data = request.json()
 folders = json_data['folder']
@@ -324,6 +321,8 @@ folders = json_data['folder']
 for folder in folders:
     print('{name:50.50} | {id:>9} | {indexNumber:20.20}'.format(**folder))
 ```
+
+Calling ```print(request.text)``` would show something like:
 
 ```json
 {
@@ -417,8 +416,6 @@ request = requests.get(base_url + '/v2/workspaces/{}/documents'.format(exchange_
 
 if request.status_code != 200:
     raise Exception(request.status_code, request.text)
-    
-print(request.text)
 
 json_data = request.json()
 documents = json_data['document']
@@ -426,6 +423,8 @@ documents = json_data['document']
 for document in documents:
     print('{name:50.50} | {id:>9} | {indexNumber:20.20}'.format(**document))
 ```
+
+Calling ```print(request.text)``` would show something like:
 
 ## Dowloading a file
 
@@ -474,8 +473,6 @@ request = requests.get(base_url + '/v2/workspaces/{}/users'.format(exchange_id),
 
 if request.status_code != 200:
     raise Exception(request.status_code, request.text)
-    
-print(request.text)
 
 json_data = request.json()
 users = json_data['users']
@@ -483,6 +480,8 @@ users = json_data['users']
 for user in users:
     print('{lastName:50.50} | {firstName:50.50} | {organization:50.50} | {email:50.50} | {role:20.20}'.format(**user))
 ```
+
+Calling ```print(request.text)``` would show something like:
 
 ## Listing groups
 
@@ -502,8 +501,6 @@ request = requests.get(base_url + '/v2/workspaces/{}/groups'.format(exchange_id)
 
 if request.status_code != 200:
     raise Exception(request.status_code, request.text)
-    
-print(request.text)
 
 json_data = request.json()
 groups = json_data['groups']
@@ -511,6 +508,8 @@ groups = json_data['groups']
 for group in groups:
     print('{name:50.50} | {id:>9} | {type:20.20}'.format(**group))
 ```
+
+Calling ```print(request.text)``` would show something like:
 
 ## Logout
 
