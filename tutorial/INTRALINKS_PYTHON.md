@@ -2,7 +2,6 @@
 
 Open Questions
 
-* Login Process is not standard
 * End other sessions
 * What if no Splash
 * accepted file format for splash images
@@ -12,20 +11,23 @@ Open Questions
 
 Content
 
-* Login
+* [Pre requisites](#pre-requisites)
 * Exchanges
-  * Listing Exchanges
-  * Entering an Exchange
+  * [Listing Exchanges](#listing_exchanges)
+    * [Variant - Listing Exchanges associated to a brand](#variant-Listing-exchanges-associated-to-a-given-branding)
+  * [Entering an Exchange](#entering-an-exchange)
 * Documents & Folders
-  * Listing Folders
-  * Listing Documents
-  * Downloading a document
+  * [Listing Folders](#listing-folders)
+  * [Listing Documents](#listing-documents)
+  * [Downloading a file](#dowloading-a-file)
+  * [Calculating a filehash](#calculating-locally-a-filehash)
 * Users & Groups
-  * Listing Users
-  * Listing Groups
-* Listing Permissions
-* Listing Audits
-* Logout
+  * [Listing Users](#listing-users)
+  * [Listing Groups](#listing-groups)
+    * [Variant - Listing groups with users](#listing-groups-with-users)
+* [Listing Permissions](#)
+* [Listing Audits](#)
+* [Logout](#)
 
 Additional topics
 * Create Folder
@@ -36,85 +38,10 @@ Additional topics
 * Send Alerts
 * Custom Fields
 
-## Login
+## Pre requisites
 
-[Developer Documentation](https://developers.intralinks.com/content/oauth_token)
-
-```python
-import requests
-
-base_url = 'https://test-api.intralinks.com'
-
-client_id = 'your_consumer_key'
-client_secret = 'your_consumer_secret'
-email =  'your_email'
-password = 'your_password'
-
-response = requests.post(base_url + '/v2/oauth/token', data={
-    'grant_type':'client_credentials',
-    'client_id':client_id,
-    'client_secret':client_secret,
-    'endOtherSessions':'True',
-    'email':email,
-    'password':password
-})
-
-if response.status_code != 200:
-    raise Exception(response.status_code, response.text)
-
-json_data = response.json()
-
-if 'access_token' not in json_data:
-    raise Exception(response.text)
-
-access_token = json_data['access_token']
-```
-
-Calling ```print(response.text)``` would show something like:
-
-```json
-{
-    "access_token":"XXXX",
-    "token_type":"BearerToken",
-    "expires_in":3599,
-    "flags":[{"name":"NEW"}],
-    "email":"foo@bar.com"
-}
-```
-
-Status code 400
-
-```json
-{
-    "ErrorCode":"invalid_request",
-    "Error":"invalid or null consumer key: XXXX",
-    "Hint":"please ensure that you are passing the consumer key like so: 'client_id={consumer_key}'"
-}
-```
-
-Status code 403
-
-```json
-{
-    "error":{
-        "code":403,
-        "message":"Credential provided is invalid. or there was problem with your account.",
-        "subcode":"017"
-    }
-}
-```
-
-Status code 403
-
-```json
-{
-    "error":{
-        "code":403,
-        "message":"Your session has been logged out as the same user is logged in elsewhere.",
-        "subcode":"018"
-    }
-}
-```
+* You need to set up a developer account and an application [Open](INTRALINKS_DEVELOPER.md)
+* You need to start a session on Intralinks [Open](INTRALINKS_AUTHENTICATION.md)
 
 ## Listing exchanges
 
@@ -733,6 +660,10 @@ Status code 200
     "cascade":"true"
 }
 ```
+
+## Listing Permissions
+
+## Listing Audits
 
 ## Typical Errors
 
