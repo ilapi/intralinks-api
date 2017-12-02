@@ -4,10 +4,11 @@ Open Questions
 
 * Login Process is not standard
 * End other sessions
-* How to get Splash Image
 * What if no Splash
+* accepted file format for splash images
 * How to use Document Token
-* Retrieve Users & Groups at the same time
+* multiple ids for users : id, userid, emailid
+* version
 
 Content
 
@@ -33,6 +34,7 @@ Additional topics
 * Create Group
 * Set Permission
 * Send Alerts
+* Custom Fields
 
 ## Login
 
@@ -48,7 +50,7 @@ client_secret = 'your_consumer_secret'
 email =  'your_email'
 password = 'your_password'
 
-request = requests.post(base_url + '/v2/oauth/token', data={
+response = requests.post(base_url + '/v2/oauth/token', data={
     'grant_type':'client_credentials',
     'client_id':client_id,
     'client_secret':client_secret,
@@ -57,14 +59,18 @@ request = requests.post(base_url + '/v2/oauth/token', data={
     'password':password
 })
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
 
-json_data = request.json()
+json_data = response.json()
+
+if 'access_token' not in json_data:
+    raise Exception(response.text)
+
 access_token = json_data['access_token']
 ```
 
-Calling ```print(request.text)``` would show something like:
+Calling ```print(response.text)``` would show something like:
 
 ```json
 {
@@ -121,23 +127,27 @@ base_url = 'https://test-api.intralinks.com'
 
 access_token = 'your_access_token'
 
-request = requests.get(base_url + '/v2/workspaces', headers={
+response = requests.get(base_url + '/v2/workspaces', headers={
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
-    
-json_data = request.json()
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
+
+json_data = response.json()
+
+if 'workspace' not in json_data:
+    raise Exception(response.text)
+
 exchanges = json_data['workspace']
 
 for exchange in exchanges:
-    print('{name:50.50} | {id:>9} | {host:20.20} | {phase:20}'.format(**exchange))
+    print('{id:>9} | {name:50.50} | {host:20.20} | {phase:20}'.format(**exchange))
 ```
 
 See https://docs.python.org/3.4/library/string.html#format-examples about ```format()```
 
-Calling ```print(request.text)``` would show something like:
+Calling ```print(response.text)``` would show something like:
 
 ```
 {
@@ -183,14 +193,14 @@ Calling ```print(request.text)``` would show something like:
 }
 ```
 
-## (Variant) Listing exchanges associated to a given branding
+## [Variant] Listing exchanges associated to a given branding
 
-[Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspaces/get_workspaces)
+*Not documented*
 
 ```python
 brand_id = 1234
 
-request = requests.get(base_url + '/v2/workspaces', params={'brandId': brand_id}, headers={
+response = requests.get(base_url + '/v2/workspaces', params={'brandId': brand_id}, headers={
     'Authorization': 'Bearer {}'.format(access_token)
 })
 ```
@@ -209,18 +219,22 @@ base_url = 'https://test-api.intralinks.com'
 access_token = 'your_access_token'
 exchange_id = 1234
 
-request = requests.get(base_url + '/v2/workspaces/{}/splash'.format(exchange_id), headers={
+response = requests.get(base_url + '/v2/workspaces/{}/splash'.format(exchange_id), headers={
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
 
-json_data = request.json()
-splashRequired = json_data['splash']['splashRequired']
+json_data = response.json()
+
+if 'splash' not in json_data:
+    raise Exception(response.text)
+
+splash = json_data['splash']
 ```
 
-Calling ```print(request.text)``` would show something like:
+Calling ```print(response.text)``` would show something like:
 
 ```json
 {
@@ -246,6 +260,8 @@ Calling ```print(request.text)``` would show something like:
 
 ### Getting the splash screen image
 
+*Not documented*
+
 ```python
 import requests
 
@@ -253,17 +269,19 @@ base_url = 'https://test-api.intralinks.com'
 
 access_token = 'your_access_token'
 exchange_id = 1234
-file_path = ''
+file_path = r'C:\temp\img.jpg'
 
-request = requests.get(base_url + '/services/workspaces/splashImage', params={'workspaceId': exchange_id}, headers={
+response = requests.get(base_url + '/services/workspaces/splashImage', params={'workspaceId': exchange_id}, headers={
     'Authorization': 'Bearer {}'.format(access_token)
 }, stream=True)
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
+
+response.headers['Content-Type'] # image/jpeg
 
 with open(file_path, 'wb') as file:
-    for chunk in request.iter_content(chunk_size=1024): 
+    for chunk in response.iter_content(chunk_size=1024): 
         if chunk: 
             file.write(chunk)
 ```
@@ -281,21 +299,28 @@ base_url = 'https://test-api.intralinks.com'
 access_token = 'your_access_token'
 exchange_id = 1234
 
-request = requests.post(base_url + '/v2/workspaces/{}/splash'.format(exchange_id), data=json.dumps({
+response = requests.post(base_url + '/v2/workspaces/{}/splash'.format(exchange_id), data=json.dumps({
         "acceptSplash": True
     }), headers={
         'Authorization': 'Bearer {}'.format(access_token),
         'Content-Type': 'application/json'
 })
 
-if request.status_code != 201:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 201:
+    raise Exception(response.status_code, response.text)
 
-json_data = request.json()
+json_data = response.json()
+
+if 'state' not in json_data:
+    raise Exception(response.text)
+
 accept_splash_state = json_data['state']
+
+if accept_splash_state != 'ALLOW':
+    raise Exception(response.text)
 ```
 
-Calling ```print(request.text)``` would show something like:
+Calling ```print(response.text)``` would show something like:
 
 ```json
 {
@@ -307,7 +332,9 @@ Calling ```print(request.text)``` would show something like:
 }
 ```
 
-## Listing folders
+## Documents & Folders
+
+### Listing folders
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Folders/get_folders)
 
@@ -319,21 +346,28 @@ base_url = 'https://test-api.intralinks.com'
 access_token = 'your_access_token'
 exchange_id = 1234
 
-request = requests.get(base_url + '/v2/workspaces/{}/folders'.format(exchange_id), headers={
+response = requests.get(base_url + '/v2/workspaces/{}/folders'.format(exchange_id), headers={
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
 
-json_data = request.json()
+json_data = response.json()
+
+if 'folder' not in json_data:
+    raise Exception(response.text)
+
 folders = json_data['folder']
 
 for folder in folders:
-    print('{name:50.50} | {id:>9} | {indexNumber:20.20}'.format(**folder))
+    if 'parentId' not in folder:
+        folder['parentId'] = -1
+
+    print('{id:>9} | {indexNumber:20.20} | {name:50.50} | {parentId:>9}'.format(**folder))
 ```
 
-Calling ```print(request.text)``` would show something like:
+Calling ```print(response.text)``` would show something like:
 
 ```json
 {
@@ -409,7 +443,7 @@ Calling ```print(request.text)``` would show something like:
 }
 ```
 
-## Listing documents
+### Listing documents
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Documents/get_documents)
 
@@ -421,23 +455,27 @@ base_url = 'https://test-api.intralinks.com'
 access_token = 'your_access_token'
 exchange_id = 1234
 
-request = requests.get(base_url + '/v2/workspaces/{}/documents'.format(exchange_id), headers={
+response = requests.get(base_url + '/v2/workspaces/{}/documents'.format(exchange_id), headers={
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
 
-json_data = request.json()
+json_data = response.json()
+
+if 'document' not in json_data:
+    raise Exception(response.text)
+
 documents = json_data['document']
 
 for document in documents:
-    print('{name:50.50} | {id:>9} | {indexNumber:20.20}'.format(**document))
+    print('{id:>9} | {indexNumber:20.20} | {name:50.50} | {extension:5.5} | {parentId:>9}'.format(**document))
 ```
 
-Calling ```print(request.text)``` would show something like:
+Calling ```print(response.text)``` would show something like:
 
-## Dowloading a file
+### Dowloading a file
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Documents/get_document_file)
 
@@ -451,22 +489,48 @@ exchange_id = 1234
 document_id = 5678
 file_path = r'C:\Temp\MyFile.pdf'
 
-request = requests.get(base_url + '/v2/workspaces/{}/documents/{}/file'.format(exchange_id, document_id), headers={
+response = requests.get(base_url + '/v2/workspaces/{}/documents/{}/file'.format(exchange_id, document_id), headers={
     'Authorization': 'Bearer {}'.format(access_token)
 }, stream=True)
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
 
 with open(file_path, 'wb') as file:
-    for chunk in request.iter_content(chunk_size=1024): 
+    for chunk in response.iter_content(chunk_size=1024): 
         if chunk: 
             file.write(chunk)
 ```
 
 https://stackoverflow.com/questions/16694907/how-to-download-large-file-in-python-with-requests-py
 
-## Listing users
+### Calculating locally a filehash
+
+[How to calculate SHA1 for a file](https://stackoverflow.com/questions/22058048/hashing-a-file-in-python)
+
+[How to encode the SHA1 hash using Base64](https://gist.github.com/formido/821003)
+
+```python
+import hashlib
+import base64
+
+file_path = r'C:\temp\report.pdf'
+
+hasher = hashlib.sha1()
+
+with open(file_name, 'rb') as f:
+    while True:
+        data = f.read(64*1024)
+        if not data:
+            break
+        hasher.update(data)
+
+file_hash = base64.b64encode(hasher.digest())
+```
+
+## Users & Groups
+
+### Listing users
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspace_Users/get_workspaces_workspace_id_users)
 
@@ -478,23 +542,66 @@ base_url = 'https://test-api.intralinks.com'
 access_token = 'your_access_token'
 exchange_id = 1234
 
-request = requests.get(base_url + '/v2/workspaces/{}/users'.format(exchange_id), headers={
+response = requests.get(base_url + '/v2/workspaces/{}/users'.format(exchange_id), headers={
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
 
-json_data = request.json()
+json_data = response.json()
+
+if 'users' not in json_data:
+    raise Exception(response.text)
+
 users = json_data['users']
 
 for user in users:
-    print('{lastName:50.50} | {firstName:50.50} | {organization:50.50} | {email:50.50} | {role:20.20}'.format(**user))
+    print('{lastName:20.20} | {firstName:20.20} | {organization:20.20} | {emailId:50.50} | {roleType:20.20}'.format(**user))
 ```
 
-Calling ```print(request.text)``` would show something like:
+Calling ```print(response.text)``` would show something like:
 
-## Listing groups
+```json
+    {"alertPreference": "IMMEDIATE",
+    "country": "FRANCE",
+    "createdBy": {"firstName": "John",
+                "firstNameSort": "John",
+                "lastName": "Doe",
+                "lastNameSort": "Doe"},
+    "createdOn": {"milliseconds": 1295622214000},
+    "doNotSendAlert": False,
+    "eitherASubmitterOrCoordinator": False,
+    "emailId": "john.doe@bigcorporate.com",
+    "firstAccessed": {"milliseconds": 1295622221000},
+    "firstName": "John",
+    "firstNameSort": "John",
+    "functionalArea": "UNAVAILABLE",
+    "id": 395175832,
+    "industry": "PHARMACEUTICALS_BIOTECHNOLOGY",
+    "isPlaceholderUser": False,
+    "isWelcomeAlertSent": True,
+    "keyContact": True,
+    "lastAccessedOn": {"milliseconds": 1512163625000},
+    "lastAlertSentDate": {"milliseconds": 1508501696000},
+    "lastModifiedBy": {"firstName": "John",
+                        "firstNameSort": "John",
+                        "lastName": "Doe",
+                        "lastNameSort": "Doe"},
+    "lastModifiedOn": {"milliseconds": 1295622214000},
+    "lastName": "Doe",
+    "lastNameSort": "Doe",
+    "officePhone": "33610801953",
+    "organization": "BigCorporate Inc.",
+    "organizationSort": "BigCorporate Inc.",
+    "roleType": "MANAGER_PLUS",
+    "status": "ACTIVE",
+    "title": "UNAVAILABLE",
+    "userId": 9620005,
+    "version": "44fef8aafc39d926a3cdcb891a93dc2b6a63380d"}
+```
+
+### Listing groups
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspace_Groups/get_workspaces_workspace_id_groups)
 
@@ -506,21 +613,89 @@ base_url = 'https://test-api.intralinks.com'
 access_token = 'your_access_token'
 exchange_id = 1234
 
-request = requests.get(base_url + '/v2/workspaces/{}/groups'.format(exchange_id), headers={
+response = requests.get(base_url + '/v2/workspaces/{}/groups'.format(exchange_id), headers={
     'Authorization': 'Bearer {}'.format(access_token)
 })
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
 
-json_data = request.json()
+json_data = response.json()
+
+if 'groups' not in json_data:
+    raise Exception(response.text)
+
 groups = json_data['groups']
 
 for group in groups:
-    print('{name:50.50} | {id:>9} | {type:20.20}'.format(**group))
+    print('{groupName:50.50} | {id:>9} | {groupType:20.20}'.format(**group))
 ```
 
-Calling ```print(request.text)``` would show something like:
+Calling ```print(response.text)``` would show something like:
+
+```json
+{"groups": [{"version": "2c93844f99e2f239b73a66d2234df2eaaaf46d5b", "groupName": "Internal", "groupType": "WORKSPACE", "ftsEnabled": True, "note": " ", "createdBy": {"firstName": "John", "lastName": "Doe", "firstNameSort": "John", "lastNameSort": "Doe"}, "createdOn": {"milliseconds": 1295622323000}, "lastModifiedBy": {"firstName": "John", "lastName": "Doe", "firstNameSort": "John", "lastNameSort": "Doe"}, "lastModifiedOn": {"milliseconds": 1506611922000}, "groupMemberCount": 3, "buyerGroupDetails": {}, "id": 10093765}, {"version": "c0e67ee04016ecdf316f372ce5d9dffe1266c048", "groupName": "1. Interest", "groupType": "WORKSPACE", "ftsEnabled": False, "note": " ", "createdBy": {"firstName": "John", "lastName": "Doe", "firstNameSort": "John", "lastNameSort": "Doe"}, "createdOn": {"milliseconds": 1422281439000}, "lastModifiedBy": {"firstName": "John", "lastName": "Doe", "firstNameSort": "John", "lastNameSort": "Doe"}, "lastModifiedOn": {"milliseconds": 1511431059000}, "groupMemberCount": 46, "buyerGroupDetails": {}, "id": 18180962}, {"version": "404af031f11be2b5ac7ca1cae378599b54feb179", "groupName": "2. Commit", "groupType": "WORKSPACE", "ftsEnabled": False, "note": " ", "createdBy": {"firstName": "John", "lastName": "Doe", "firstNameSort": "John", "lastNameSort": "Doe"}, "createdOn": {"milliseconds": 1422281459000}, "lastModifiedBy": {"firstName": "John", "lastName": "Doe", "firstNameSort": "John", "lastNameSort": "Doe"}, "lastModifiedOn": {"milliseconds": 1511431061000}, "groupMemberCount": 77, "buyerGroupDetails": {}, "id": 18180982}], "workspaceGroupMembers": []}
+```
+
+### [Variant] Listing groups with users
+
+[Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspace_Groups/get_workspaces_workspace_id_groups)
+
+```python
+response = requests.get(base_url + '/v2/workspaces/{}/groups'.format(exchange_id), params={'includeWorkspaceGroupMembers':'true'}, headers={
+    'Authorization': 'Bearer {}'.format(access_token)
+})
+
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
+
+json_data = response.json()
+
+if 'groups' not in json_data or 'workspaceGroupMembers' not in json_data:
+    raise Exception(response.text)
+
+groups = json_data['groups']
+group_members = json_data['workspaceGroupMembers']
+```
+
+```json
+{
+    "groups":[{
+        "version":"c0e67ee04016ecdf316f372ce5d9dffe1266c048",
+        "groupName":"1. Interest",
+        "groupType":"WORKSPACE",
+        "ftsEnabled":false,
+        "note":" ",
+        "createdBy":{
+            "firstName":"John",
+            "lastName":"Doe",
+            "firstNameSort":"John",
+            "lastNameSort":"Doe"
+        },
+        "createdOn":{
+            "milliseconds":1422281439000
+        },
+        "lastModifiedBy":{
+            "firstName":"John",
+            "lastName":"Doe",
+            "firstNameSort":"John",
+            "lastNameSort":"Doe"
+        },
+        "lastModifiedOn":{
+            "milliseconds":1511431059000
+        },
+        "groupMemberCount":46,
+        "buyerGroupDetails":{},
+        "id":18180962
+    },{
+        ...
+    }],
+    "workspaceGroupMembers":[
+        {"workspaceGroupId":10093765,"workspaceUserId":395175832,"userId":9620005},
+        {"workspaceGroupId":10093765,"workspaceUserId":3254281522,"userId":27605305}
+    ]
+}
+```
 
 ## Logout
 
@@ -535,7 +710,7 @@ access_token = 'your_access_token'
 client_id = 'your_consumer_key'
 client_secret = 'your_consumer_secret'
 
-request = requests.put(base_url + '/v2/oauth/revoke', params={
+response = requests.put(base_url + '/v2/oauth/revoke', params={
         'token': access_token,
         'client_id': client_id,
         'client_secret': client_secret
@@ -543,10 +718,10 @@ request = requests.put(base_url + '/v2/oauth/revoke', params={
         'Authorization': 'Bearer {}'.format(access_token)
 })
 
-if request.status_code != 200:
-    raise Exception(request.status_code, request.text)
+if response.status_code != 200:
+    raise Exception(response.status_code, response.text)
     
-print(request.text)
+print(response.text)
 ```
 
 Status code 200
