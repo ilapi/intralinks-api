@@ -528,6 +528,15 @@ Calling ```print(response.text)``` would show something like:
     "version": "44fef8aafc39d926a3cdcb891a93dc2b6a63380d"}
 ```
 
+About IDs: a user in an exchange has 3 different IDs
+
+Property | Independent of the exchange | Meaning
+---------|-----------------------------|--------
+emailId | Yes | identify the user, independently of an exchange, not stable over time (a user can change email addresses)
+userId | Yes | identify the user, independently of an exchange, stable over time
+id | No | identify user in this exchange
+
+
 ### Listing groups
 
 [Developer Documentation](https://developers.intralinks.com/swagger/api-ui.html#!/Workspace_Groups/get_workspaces_workspace_id_groups)
