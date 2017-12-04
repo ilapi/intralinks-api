@@ -4,7 +4,6 @@ Open Questions
 
 * End other sessions
 * What if no Splash
-* accepted file format for splash images
 * How to use Document Token
 * multiple ids for users : id, userid, emailid
 * version
@@ -196,7 +195,7 @@ base_url = 'https://test-api.intralinks.com'
 
 access_token = 'your_access_token'
 exchange_id = 1234
-file_path = r'C:\temp\img.jpg'
+file_path_without_extension = r'C:\temp\img.jpg'
 
 response = requests.get(base_url + '/services/workspaces/splashImage', params={'workspaceId': exchange_id}, headers={
     'Authorization': 'Bearer {}'.format(access_token)
@@ -205,9 +204,14 @@ response = requests.get(base_url + '/services/workspaces/splashImage', params={'
 if response.status_code != 200:
     raise Exception(response.status_code, response.text)
 
-response.headers['Content-Type'] # image/jpeg
+extensions = {
+    'image/jpeg':'.jpg',
+    'image/gif':'.gif',
+}
 
-with open(file_path, 'wb') as file:
+extension = extensions[response.headers['Content-Type']]
+
+with open(file_path_without_extension + extension, 'wb') as file:
     for chunk in response.iter_content(chunk_size=1024): 
         if chunk: 
             file.write(chunk)
