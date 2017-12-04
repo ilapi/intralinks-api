@@ -5,8 +5,9 @@ Open Questions
 * End other sessions
 * What if no Splash
 * How to use Document Token
-* multiple ids for users : id, userid, emailid
-* version
+* How to create multiple groups
+* Versions
+* Dates
 
 Content
 
