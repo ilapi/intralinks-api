@@ -6,6 +6,8 @@ Open Questions
 * What if no Splash
 * How to use Document Token
 * How to create multiple groups
+* purpose of submissionId
+* create folder tree
 * Versions
 * Dates
 
