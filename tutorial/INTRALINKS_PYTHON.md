@@ -197,7 +197,7 @@ base_url = 'https://test-api.intralinks.com'
 
 access_token = 'your_access_token'
 exchange_id = 1234
-file_path_without_extension = r'C:\temp\img.jpg'
+file_path_without_extension = r'C:\temp\img'
 
 response = requests.get(base_url + '/services/workspaces/splashImage', params={'workspaceId': exchange_id}, headers={
     'Authorization': 'Bearer {}'.format(access_token)
