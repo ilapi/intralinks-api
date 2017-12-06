@@ -1,5 +1,10 @@
 # Introduction to the Intralinks API with Python
 
+Tokens
+* Patrick: 5XMHtEYIskeXe6bQMvEog4s5Hp56
+* Pierre Yves: JjqmePl3apUMif50wF0Mn8APt3jw
+* Mario: JjqmePl3apUMif50wF0Mn8APt3jw
+
 Open Questions
 
 * End other sessions
