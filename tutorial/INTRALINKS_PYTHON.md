@@ -741,3 +741,14 @@ Status code 303
     }]
 }
 ```
+
+### Wrong URL
+
+You are trying to access a wrong API URL
+
+Status code 404
+
+```html
+<html><head>\r\n<meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>Error</title>\r\n\r\n<script src="support_files/showmaintenance.js" type="text/javascript">\r\n</script>\r\n\r\n<style>\r\nbody{\r\n\tmargin:0px;\r\n\tpadding:0px;\r\n\theight: 100%;\r\n\twidth: 100%;\r\n\tfont-family: Arial Unicode MS,Arial,sans-serif;\r\n}\r\n\r\n.main_header{\r\n\tbackground-color:#FFFFFF;\r\n\theight:56px;\r\n\tpadding-left: 20px;\r\n\tpadding-top: 20px;\r\n}\r\n\r\n.content{\r\n\tbackground-color:#FFFFFF;\r\n\ttext-align:center;\r\n\tpadding:100px 0px 250px 0px;\r\n\tfont-weight:bold;\r\n\tfont-size:12px;\r\n}\r\n.footer{\r\n    color: #666666;\r\n\tfont-family: Arial,Helvetica,sans-serif;\r\n\tfont-size: 10px;\r\n\tpadding-top: 5px;\r\n\tpadding-left: 5px;\r\n\ttext-align: center;\r\n}\r\n.footer a {\r\n
+ color: #006699;\r\n    textDecoration: underline;\r\n}\r\n\r\n</style>\r\n</head>\r\n<body>\r\n\r\n<div class="main_header">\r\n\t<img src="/images/mastLogo_new.png">\r\n</div>\r\n<div class="content">\r\n\r\nYour request cannot be completed, please retry. <br><br>\r\nIf the problem persists please contact <a href="mailto:support@intralinks.com">IntraLinks Support</a> for more information.</div>\r\n<div class="footer">\r\n<script type="text/javascript">document.write(\'ï¿½ 2000-\'+new Date().getFullYear()+\' Intralinks, Inc.\');</script><a href="/legalNotices.html">legal notices</a>\r\n</div>\r\n\r\n</body></html>
+```
