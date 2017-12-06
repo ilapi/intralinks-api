@@ -4,7 +4,6 @@ Open Questions
 
 * End other sessions
 * What if no Splash
-* How to use Document Token
 * How to create multiple groups
 * purpose of submissionId
 * create folder tree
