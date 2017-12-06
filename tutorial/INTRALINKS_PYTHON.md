@@ -1,9 +1,9 @@
 # Introduction to the Intralinks API with Python
 
 Tokens
-* Patrick: oDzrx6RXydoQtmnDRglf8mzl5wcM
-* Pierre Yves: iXGhyxdpZqMOAbAp5bgxGGJB6zbK
-* Mario: hn8nEM1fFoGD1rlcevALkD5iLiJK
+* Patrick: eAVvitTiShACeM1UU6AkQDLtiInl
+* Pierre Yves: XdDjwxOBRs1LkrxteMq4bre43giR
+* Mario: 7bS9A2j45YiD7LcYExAOLodGXVTK
 
 Open Questions
 
